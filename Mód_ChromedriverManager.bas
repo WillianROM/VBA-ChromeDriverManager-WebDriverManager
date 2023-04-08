@@ -1,6 +1,9 @@
 Attribute VB_Name = "Mód_ChromedriverManager"
 Option Explicit
 
+'Criado por Willian Rafael de Oliveira Melo
+'Insira esse módulo no seu VBE e no coloque 'Call ChromedriverManager' nos seus códigos antes de rodar as automações usando Selenium Basic
+
 #If VBA7 Then
     ' 64-bit version of Office
     Private Declare PtrSafe Function URLDownloadToFile Lib "urlmon" _
@@ -44,7 +47,7 @@ Const pathTempChormedriver      As String = "C:\temp\chromedriver_win32"
 Dim pathChromedriver            As String
     
 
-Sub ChromedriverManager()
+Public Sub ChromedriverManager()
    ' Obter a versão do Chrome
     Dim versaoChrome            As String
     versaoChrome = CreateObject("WScript.Shell").RegRead("HKEY_CURRENT_USER\Software\Google\Chrome\BLBeacon\version")
@@ -61,14 +64,14 @@ Sub ChromedriverManager()
         Call ApagarPastaExistente(pathTempChormedriver)
         Call DeletarArquivo(pathChromedriver)
         Call ObterVersoesDoChromeDriver(Split(versaoChrome, ".")(0))
-        Call ExtrairArquivosZip
-        Call CopyChromeDriver
+        Call ExtrairArquivosZip(pathTempChormedriverZip, pathTempChormedriver)
+        Call CopyChromeDriver(pathTempChormedriver, pathChromedriver)
     End If
 End Sub
 
 
     
-Sub ObterVersoesDoChromeDriver(ByVal inicioVersaoChrome As String)
+Private Sub ObterVersoesDoChromeDriver(ByVal inicioVersaoChrome As String)
     Const path                  As String = "C9DxTc aw5Odc"
     Dim url                     As String
     Dim httpRequest             As Object
@@ -89,7 +92,7 @@ Sub ObterVersoesDoChromeDriver(ByVal inicioVersaoChrome As String)
     Set versoes = html.getElementsByClassName(path)
     
     For i = 0 To versoes.Length - 1
-        versao = Split(versoes(i).innerText, " ")(1) ' Retirar o Chromedriver do innettext
+        versao = Split(versoes(i).innerText, " ")(1) ' Retirar o Chromedriver do innerText
         If inicioVersaoChrome = Split(versao, ".")(0) Then
             Call BaixarChromeDriver(versao)
             Exit For
@@ -99,7 +102,7 @@ Sub ObterVersoesDoChromeDriver(ByVal inicioVersaoChrome As String)
 End Sub
 
 
-Sub BaixarChromeDriver(ByVal versao As String)
+Private Sub BaixarChromeDriver(ByVal versao As String)
 
     Dim url                     As String
     Dim Caminho                 As String
@@ -111,10 +114,10 @@ Sub BaixarChromeDriver(ByVal versao As String)
     
 End Sub
 
-Sub DeletarArquivo(ByVal caminhoCompletoDoArquivoParaDeletar As String)
+Private Sub DeletarArquivo(ByVal caminhoCompletoDoArquivoParaDeletar As String)
 
     Dim filePath                As String
-    filePath = caminhoCompletoDoArquivoParaDeletar
+    Let filePath = caminhoCompletoDoArquivoParaDeletar
     
     'Verifica se o arquivo existe
     If Dir(filePath) <> "" Then
@@ -124,9 +127,9 @@ Sub DeletarArquivo(ByVal caminhoCompletoDoArquivoParaDeletar As String)
 
 End Sub
 
-Sub ApagarPastaExistente(ByVal fol As String)
+Private Sub ApagarPastaExistente(ByVal fol As String)
 
-    Dim fso
+    Dim fso                As Object
     
     Set fso = CreateObject("Scripting.FileSystemObject")
     
@@ -138,7 +141,7 @@ Sub ApagarPastaExistente(ByVal fol As String)
     
 End Sub
 
-Sub ExtrairArquivosZip()
+Private Sub ExtrairArquivosZip(ByVal pathTempChormedriverZip As String, ByVal pathTempChormedriver As String)
     
     ' Caminho do arquivo zipado
     Dim zipFilePath             As String
@@ -174,7 +177,7 @@ Sub ExtrairArquivosZip()
 End Sub
 
 
-Sub CopyChromeDriver()
+Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal pathChromedriver As String)
 
     Dim sourcePath              As String
     Dim destinationPath         As String
@@ -185,6 +188,5 @@ Sub CopyChromeDriver()
     
     'copiar o arquivo
     FileCopy sourcePath, destinationPath
-    
-    
+      
 End Sub
