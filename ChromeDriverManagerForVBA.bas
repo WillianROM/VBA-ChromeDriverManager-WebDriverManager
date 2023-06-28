@@ -111,7 +111,7 @@ Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
     Dim version                         As String
     
     ' Set the URL to the webpage containing the ChromeDriver versions
-    Let url = "https://sites.google.com/chromium.org/driver/"
+    Let url = "https://sites.google.com/chromium.org/driver/downloads"
     
     ' Create a new HTTP request object
     Set httpRequest = CreateObject("MSXML2.XMLHTTP")
@@ -229,4 +229,5 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     FileCopy sourcePath, destinationPath
       
 End Sub
+
 
