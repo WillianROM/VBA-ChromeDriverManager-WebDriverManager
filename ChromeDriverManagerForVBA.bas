@@ -1,4 +1,3 @@
-Attribute VB_Name = "ChromeDriverManagerForVBA"
 Option Explicit
 
 ' Createad by Willian Rafael de Oliveira Melo in 2023
@@ -87,6 +86,7 @@ Public Sub ChromeDriverManager()
     ' Compare versions, if different get new file
     If Split(chromeVersion, ".")(0) <> Split(chromeVersionDriver, ".")(0) Then
     
+        Call CheckIfTempFolderExists
         Call DeleteFile(pathTempChormedriverZip)
         Call DeleteExistingFolder(pathTempChormedriver)
         Call GetChromeDriverVersion(Split(chromeVersion, ".")(0))
@@ -98,6 +98,27 @@ Public Sub ChromeDriverManager()
     
 End Sub
 
+Private Sub CheckIfTempFolderExists()
+
+    Dim fso As Object
+    Dim pastaTemp As String
+    
+    ' Create an instance of the FileSystemObject
+    Set fso = CreateObject("Scripting.FileSystemObject")
+    
+    ' Set the path for the Temp folder
+    pastaTemp = "C:\temp"
+    
+    ' Check if the Temp folder exists
+    If Not fso.FolderExists(pastaTemp) Then
+        ' If the Temp folder doesn't exist, create it
+        fso.CreateFolder pastaTemp
+    End If
+    
+    ' Release the FileSystemObject object
+    Set fso = Nothing
+    
+End Sub
 
     
 Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
@@ -119,7 +140,7 @@ Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
     
     ' Send a GET request to the URL and wait for the response
     httpRequest.Open "GET", url, False
-    httpRequest.send
+    httpRequest.Send
     
     
     ' Create a new HTML file object
@@ -229,5 +250,4 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     FileCopy sourcePath, destinationPath
       
 End Sub
-
 
