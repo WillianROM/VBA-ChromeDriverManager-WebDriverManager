@@ -89,7 +89,8 @@ Public Sub ChromeDriverManager()
         Call CheckIfTempFolderExists
         Call DeleteFile(pathTempChormedriverZip)
         Call DeleteExistingFolder(pathTempChormedriver)
-        Call GetChromeDriverVersion(Split(chromeVersion, ".")(0))
+        'Call GetChromeDriverVersion(Split(chromeVersion, ".")(0))
+        Call DownloadChromeDriver(chromeVersion)
         Call ExtractZipFiles(pathTempChormedriverZip, pathTempChormedriver)
         Call DeleteFile(pathChromedriver)
         Call CopyChromeDriver(pathTempChormedriver, pathChromedriver)
@@ -122,7 +123,7 @@ End Sub
 
     
 Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
-
+' DESATIVADO DEPOIS DA VERSÃO CHROME 115
     Const classElementName              As String = "C9DxTc aw5Odc" 'This is the current class for finding Chrome versions
     Dim url                             As String
     Dim httpRequest                     As Object
@@ -178,7 +179,8 @@ Private Sub DownloadChromeDriver(ByVal version As String)
     Dim path                            As String
     
     ' Set the URL to the download link for the specified ChromeDriver version
-    Let url = "https://chromedriver.storage.googleapis.com/" & version & "/chromedriver_win32.zip"
+    'Let url = "https://chromedriver.storage.googleapis.com/" & version & "/chromedriver_win32.zip"
+    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & version & "/win64/chromedriver-win64.zip"
     
     ' Set the local file path to save the downloaded file
     Let path = "C:\temp\chromedriver_win32.zip"
@@ -244,7 +246,7 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     Dim sourcePath                      As String
     
     ' Define source path
-    Let sourcePath = pathTempChormedriver & "\" & "chromedriver.exe"
+    Let sourcePath = pathTempChormedriver & "\chromedriver-win64\" & "chromedriver.exe"
     
     ' Copy the file
     FileCopy sourcePath, destinationPath
