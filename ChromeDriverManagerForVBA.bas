@@ -1,3 +1,4 @@
+Attribute VB_Name = "Mód_ChormeDriverManager"
 Option Explicit
 
 ' Createad by Willian Rafael de Oliveira Melo in 2023
@@ -123,7 +124,7 @@ End Sub
 
     
 Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
-' DESATIVADO DEPOIS DA VERSÃO CHROME 115
+' DESATIVADO DEPOIS DA VERS?O CHROME 115
     Const classElementName              As String = "C9DxTc aw5Odc" 'This is the current class for finding Chrome versions
     Dim url                             As String
     Dim httpRequest                     As Object
@@ -177,16 +178,32 @@ Private Sub DownloadChromeDriver(ByVal version As String)
 
     Dim url                             As String
     Dim path                            As String
+    Dim hr                              As Long
+    Dim versionApi                      As String
     
+    versionApi = version
+    
+inicio:
     ' Set the URL to the download link for the specified ChromeDriver version
     'Let url = "https://chromedriver.storage.googleapis.com/" & version & "/chromedriver_win32.zip"
-    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & version & "/win32/chromedriver-win32.zip"
-    
+    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & versionApi & "/win32/chromedriver-win32.zip"
+    'Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win32/chromedriver-win32.zip"
     ' Set the local file path to save the downloaded file
     Let path = "C:\temp\chromedriver_win32.zip"
     
     ' Download the file from the specified URL to the local file path using the URLDownloadToFile function
-    URLDownloadToFile 0, url, path, 0, 0
+    hr = URLDownloadToFile(0, url, path, 0, 0)
+    
+    
+    
+    If hr <> 0 Then
+    
+        versionApi = CLng(versionApi) - 1
+        versionApi = Format(CLng(versionApi), "0\.0\.0000\.00")
+        
+        GoTo inicio
+        
+    End If
     
 End Sub
 
@@ -252,4 +269,5 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     FileCopy sourcePath, destinationPath
       
 End Sub
+
 
