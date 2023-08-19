@@ -1,4 +1,3 @@
-Attribute VB_Name = "Mód_ChormeDriverManager"
 Option Explicit
 
 ' Createad by Willian Rafael de Oliveira Melo in 2023
