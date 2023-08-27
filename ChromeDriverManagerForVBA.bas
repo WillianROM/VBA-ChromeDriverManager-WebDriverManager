@@ -10,33 +10,33 @@ Option Explicit
             ByVal szFileName As String, ByVal dwReserved As Long, ByVal lpfnCB As Long) As Long
             
     Private Declare PtrSafe Function OpenProcess Lib "kernel32" ( _
-        ByVal dwDesiredAccess As Long, _
-        ByVal bInheritHandle As Long, _
-        ByVal dwProcessId As Long) As Long
+            ByVal dwDesiredAccess As Long, _
+            ByVal bInheritHandle As Long, _
+            ByVal dwProcessId As Long) As Long
     
     Private Declare PtrSafe Function CloseHandle Lib "kernel32" ( _
-        ByVal hObject As Long) As Long
+            ByVal hObject As Long) As Long
     
     Private Declare PtrSafe Function WaitForSingleObject Lib "kernel32" ( _
-        ByVal hHandle As Long, _
-        ByVal dwMilliseconds As Long) As Long
+            ByVal hHandle As Long, _
+            ByVal dwMilliseconds As Long) As Long
 #Else
     ' 32-bit version of Office
     Private Declare Function URLDownloadToFile Lib "urlmon" _
-        Alias "URLDownloadToFileA" (ByVal pCaller As Long, ByVal szURL As String, _
-        ByVal szFileName As String, ByVal dwReserved As Long, ByVal lpfnCB As Long) As Long
+            Alias "URLDownloadToFileA" (ByVal pCaller As Long, ByVal szURL As String, _
+            ByVal szFileName As String, ByVal dwReserved As Long, ByVal lpfnCB As Long) As Long
         
     Private Declare Function OpenProcess Lib "kernel32" ( _
-        ByVal dwDesiredAccess As Long, _
-        ByVal bInheritHandle As Long, _
-        ByVal dwProcessId As Long) As Long
+            ByVal dwDesiredAccess As Long, _
+            ByVal bInheritHandle As Long, _
+            ByVal dwProcessId As Long) As Long
 
     Private Declare Function CloseHandle Lib "kernel32" ( _
-        ByVal hObject As Long) As Long
+            ByVal hObject As Long) As Long
 
     Private Declare Function WaitForSingleObject Lib "kernel32" ( _
-        ByVal hHandle As Long, _
-        ByVal dwMilliseconds As Long) As Long
+            ByVal hHandle As Long, _
+            ByVal dwMilliseconds As Long) As Long
 #End If
 
 
@@ -89,8 +89,7 @@ Public Sub ChromeDriverManager()
         Call CheckIfTempFolderExists
         Call DeleteFile(pathTempChormedriverZip)
         Call DeleteExistingFolder(pathTempChormedriver)
-        'Call GetChromeDriverVersion(Split(chromeVersion, ".")(0))
-        Call DownloadChromeDriver(chromeVersion)
+        Call GetChromeDriverVersion(Split(chromeVersion, ".")(0))
         Call ExtractZipFiles(pathTempChormedriverZip, pathTempChormedriver)
         Call DeleteFile(pathChromedriver)
         Call CopyChromeDriver(pathTempChormedriver, pathChromedriver)
@@ -101,8 +100,8 @@ End Sub
 
 Private Sub CheckIfTempFolderExists()
 
-    Dim fso As Object
-    Dim pastaTemp As String
+    Dim fso                             As Object
+    Dim pastaTemp                       As String
     
     ' Create an instance of the FileSystemObject
     Set fso = CreateObject("Scripting.FileSystemObject")
@@ -123,8 +122,9 @@ End Sub
 
     
 Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
-' DESATIVADO DEPOIS DA VERS?O CHROME 115
-    Const classElementName              As String = "C9DxTc aw5Odc" 'This is the current class for finding Chrome versions
+
+    Const elementPath                   As String = "tr.status-ok code" 'This is the current css for finding Chrome versions
+    
     Dim url                             As String
     Dim httpRequest                     As Object
     Dim html                            As Object
@@ -133,7 +133,7 @@ Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
     Dim version                         As String
     
     ' Set the URL to the webpage containing the ChromeDriver versions
-    Let url = "https://sites.google.com/chromium.org/driver/downloads"
+    Let url = "https://googlechromelabs.github.io/chrome-for-testing/"
     
     ' Create a new HTTP request object
     Set httpRequest = CreateObject("MSXML2.XMLHTTP")
@@ -153,14 +153,14 @@ Private Sub GetChromeDriverVersion(ByVal beginningOfChromeVersion As String)
     
     
     ' Get a list of all elements on the page with the specified class name
-    Set versionsList = html.getElementsByClassName(classElementName)
+    Set versionsList = html.querySelectorAll(elementPath)
     
     
     ' Loop through the list of versions and find the one that matches the major version number of Chrome installed on the system
     For i = 0 To versionsList.Length - 1
-    
+        
         ' Get the version number from the inner text of the current element in the list
-        Let version = Split(versionsList(i).innerText, " ")(1)
+        Let version = versionsList.Item(i).outerText
         
         ' If the major version number of the ChromeDriver matches the major version number of the installed Chrome, download the ChromeDriver and exit the loop
         If beginningOfChromeVersion = Split(version, ".")(0) Then
@@ -184,9 +184,8 @@ Private Sub DownloadChromeDriver(ByVal version As String)
     
 inicio:
     ' Set the URL to the download link for the specified ChromeDriver version
-    'Let url = "https://chromedriver.storage.googleapis.com/" & version & "/chromedriver_win32.zip"
     Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & versionApi & "/win32/chromedriver-win32.zip"
-    'Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win32/chromedriver-win32.zip"
+    
     ' Set the local file path to save the downloaded file
     Let path = "C:\temp\chromedriver_win32.zip"
     
@@ -268,5 +267,6 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     FileCopy sourcePath, destinationPath
       
 End Sub
+
 
 
