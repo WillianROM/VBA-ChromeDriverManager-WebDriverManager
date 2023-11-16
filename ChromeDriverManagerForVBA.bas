@@ -178,13 +178,10 @@ Private Sub DownloadChromeDriver(ByVal version As String)
     Dim url                             As String
     Dim path                            As String
     Dim hr                              As Long
-    Dim versionApi                      As String
-    
-    versionApi = version
-    
-inicio:
+
+
     ' Set the URL to the download link for the specified ChromeDriver version
-    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & versionApi & "/win32/chromedriver-win32.zip"
+    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & version & "/win32/chromedriver-win32.zip"
     
     ' Set the local file path to save the downloaded file
     Let path = "C:\temp\chromedriver_win32.zip"
@@ -192,15 +189,9 @@ inicio:
     ' Download the file from the specified URL to the local file path using the URLDownloadToFile function
     hr = URLDownloadToFile(0, url, path, 0, 0)
     
-    
-    
     If hr <> 0 Then
-    
-        versionApi = CLng(versionApi) - 1
-        versionApi = Format(CLng(versionApi), "0\.0\.0000\.00")
-        
-        GoTo inicio
-        
+        MsgBox "An error occurred when downloading Chromedriver, check the website https://googlechromelabs.github.io/chrome-for-testing/ if the stable version is " & version, vbCritical, "Error"
+        End
     End If
     
 End Sub
