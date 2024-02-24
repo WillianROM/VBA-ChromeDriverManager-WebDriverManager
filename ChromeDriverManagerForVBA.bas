@@ -1,3 +1,4 @@
+Attribute VB_Name = "ChromeDriverManagerForVBA"
 Option Explicit
 
 ' Createad by Willian Rafael de Oliveira Melo in 2023
@@ -181,7 +182,7 @@ Private Sub DownloadChromeDriver(ByVal version As String)
 
 
     ' Set the URL to the download link for the specified ChromeDriver version
-    Let url = "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/" & version & "/win32/chromedriver-win32.zip"
+    Let url = "https://storage.googleapis.com/chrome-for-testing-public/" & version & "/win32/chromedriver-win32.zip"
     
     ' Set the local file path to save the downloaded file
     Let path = "C:\temp\chromedriver_win32.zip"
@@ -258,6 +259,7 @@ Private Sub CopyChromeDriver(ByVal pathTempChormedriver As String, ByVal destina
     FileCopy sourcePath, destinationPath
       
 End Sub
+
 
 
 
